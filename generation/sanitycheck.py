@@ -27,6 +27,6 @@ command = f"cd ../transformers/examples/language-modeling ; \
                     --validation_file {dummy_eval_path} \
                     --do_train \
                     --do_eval \
-                    --output_dir /tmp/test-clm"
+                    --output_dir tmp/sanity-clm"
 print(command)
 os.system(command)
