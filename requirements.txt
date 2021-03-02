@@ -2,5 +2,8 @@ tqdm
 beautifulsoup4
 requests
 pandas
+tensorboard
+torch
 # huggingface transformers library containing GPT2
 transformers
+datasets
