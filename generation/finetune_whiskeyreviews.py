@@ -39,14 +39,14 @@ train_path = os.path.abspath("../dataset/finetune/train.csv")
 val_path, test_path = train_path.replace("train.csv", "val.csv"), train_path.replace("train.csv", "test.csv")
 finetuned_model_path = os.path.abspath("finetuned-model")
 if not os.path.exists(finetuned_model_path): os.mkdir(finetuned_model_path)
-command =   f"cd ../transformers/examples/language-modeling ; \\" \
-            f"python -m torch.distributed.launch --nproc_per_node 2 run_clm.py \\" \ 
-            f"--model_name_or_path gpt2 \\" \
-            f"--train_file {train_path} \\" \
-            f"--validation_file {val_path} \\" \
-            f"--do_train \\" \
-            f"--do_eval \\" \
-            f"--output_dir {finetuned_model_path} "
+command =   f"cd ../transformers/examples/language-modeling ; \
+            python -m torch.distributed.launch --nproc_per_node 2 run_clm.py \
+            --model_name_or_path gpt2 \
+            --train_file {train_path} \
+            --validation_file {val_path} \
+            --do_train \
+            --do_eval \
+            --output_dir {finetuned_model_path} ".replace("   ", "")
 print(command)
 # os.system(command)
 print("Run the command above to start training.")
