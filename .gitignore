@@ -135,3 +135,4 @@ dmypy.json
 *.aux
 *.synctex.gz
 *.idea
+*.DS_Store

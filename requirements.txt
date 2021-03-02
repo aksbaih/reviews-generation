@@ -2,3 +2,5 @@ tqdm
 beautifulsoup4
 requests
 pandas
+# huggingface transformers library containing GPT2
+transformers
