@@ -308,7 +308,9 @@ def main():
 
         # return generated_sequences
     if args.output_file:
-        with open(args.output_file, 'w') as f: f.writelines(generated_sequences)
+        import pandas as pd
+        out_df = pd.DataFrame({"prompt": prompts, "gen": generated_sequences})
+        out_df.to_csv(args.output_file)
 
 
 if __name__ == "__main__":
