@@ -175,7 +175,7 @@ def main():
     parser.add_argument("--prompt", type=str, default="")
     parser.add_argument("--prompts_file", type=str, default="")
     parser.add_argument("--output_file", type=str, default="")
-    parser.add_argument("--quite", type=bool, default=False)
+    parser.add_argument("--quite", type=bool, default=False, action="store_true")
     parser.add_argument("--length", type=int, default=20)
     parser.add_argument("--stop_token", type=str, default=None, help="Token at which text generation is stopped")
 
@@ -301,7 +301,7 @@ def main():
                 prompt_text + text[len(tokenizer.decode(encoded_prompt[0], clean_up_tokenization_spaces=True)) :]
             )
 
-            generated_sequences.append(total_sequence)
+            generated_sequences.append(total_sequence[:total_sequence.find("<price>")])
             if not args.quite: print(total_sequence)
 
         # return generated_sequences
