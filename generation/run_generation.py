@@ -233,7 +233,12 @@ def main():
     logger.info(args)
 
     try:
-        prompts = open(args.prompts_file, 'r').readlines()
+        prompts_file = open(args.prompts_file, 'r')
+        print(f"Preparing prompots from {args.prompts_file}")
+        import pandas as pd
+        from tqdm import tqdm
+        df_texts = pd.read_csv(prompts_file)["text"].to_list()
+        prompts = [row[:row.find("<review>")+len("<review>")] for row in df_texts]
     except:
         prompts = [args.prompt if args.prompt else input("Model prompt >>> ")]
 
