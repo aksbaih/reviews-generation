@@ -39,3 +39,32 @@ python -m torch.distributed.launch --nproc_per_node 2 run_clm.py
     --dataloader_num_workers 4
 ```
 
+## Generation
+After finetuning, you can now generate a few reviews. [`run_generation.py`](run_generation.py) is adopted from huggingface and modified slightly to support generation on multiple prompts.
+
+The prompt should follow the same format used during training:
+`
+f"<price>{row['price']}<rating>{row['rating']}<whiskey>{row['whiskey']}<review>"
+`
+but now you stop at the `<review>` token and GPT2 will take it from there. You can use the following command to run generation:
+```
+python run_generation.py 
+    --model_type gpt2 
+    --model_name_or_path finetuned-model-train/ 
+    --prompts ../dataset/finetune/test.csv 
+    --quite 
+    --output_file generations_test.csv 
+    --length 200 
+        2> /dev/null
+```
+`--prompts ../dataset/finetune/val.csv` is going to automatically extract the prompts for the test set.
+You can provide your own prompt by removing the `--quite` flag and replacing the `--prompts` flag with `--prompt yourformattedprompt`.
+
+## Sample Generations
+These samples are from the test set
+```
+* "<price>495<rating>89<whiskey>Bainbridge Yama American Single Grain Barley Mizunara Japanese Oak Cask, 45%<review>","Distilled in 2003 and bottled in September 2016. Rum mizunara has been a popular whiskey for a very long time, one worth considering. The nose offers light toffee, sweet orange syrup, lime juice, light honey, sandalwood, and light oak, adding some teasing dried spice notes. The palate is spicy, with caramel and milk chocolate, red currant, and dark fruit. It finishes with coffee, orange rind, and cocoa powder, finishing dry and spicy."
+* "<price>225<rating>94<whiskey>Amrut Greedy Angels, 50%<review>","After pushing back into the woods this year, an aggressive and well-integrated expression is finally showing its chest. A blend of Irish oak, red berry, and grape skins, there’s no rush. The nose is fruity and sweet, with fragrant nuts and ripe rhubarb, ginger, nougat, tarry rope, and cocoa. It’s a mix of different Irish oak expressions. But it’s got more depth than the others, so give it a whirl. (6,650 bottles)"
+* "<price>130<rating>94<whiskey> Lagavulin 12 year old (Diageo Special Releases 2017), 56.5%<review>","Toreador Extra white oak blends in with bottled classic Lagavulin. Powerful tobacco flavors, leather and silky texture: aromas of mothballs, squid skin, oil, drying grass, cinnamon sticks, and dried spice. Firm and well-balanced, with creamy vanilla and underlying fruit and citrus notes. Mouth-coating, with well-rounded flavor: short, gentle, and sweet. Again, great finish. This needs more effort to fully mature. (U.S. only)"
+```
+
