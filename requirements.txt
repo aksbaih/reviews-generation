@@ -5,5 +5,4 @@ pandas
 tensorboard
 torch
 # huggingface transformers library containing GPT2
-transformers
-datasets
+# install it from the transformers git repo alongside its own requirements

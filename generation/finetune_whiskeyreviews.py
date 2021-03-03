@@ -39,14 +39,14 @@ train_path = os.path.abspath("../dataset/finetune/train.csv")
 val_path, test_path = train_path.replace("train.csv", "val.csv"), train_path.replace("train.csv", "test.csv")
 finetuned_model_path = os.path.abspath("finetuned-model")
 if not os.path.exists(finetuned_model_path): os.mkdir(finetuned_model_path)
-command =   f"cd ../transformers/examples/language-modeling ; \
-            python -m torch.distributed.launch --nproc_per_node 2 run_clm.py \
-            --model_name_or_path gpt2 \
-            --train_file {train_path} \
-            --validation_file {val_path} \
-            --do_train \
-            --do_eval \
-            --output_dir {finetuned_model_path} ".replace("   ", "")
+command = f"cd ../transformers/examples/language-modeling ; " \
+          f"python -m torch.distributed.launch --nproc_per_node 2 run_clm.py --output_dir " \
+          f"../../../generation/finetuned-model-train/ --model_type gpt2 --model_name_or_path gpt2 --validation_file " \
+          f"{val_path} --do_eval --do_train --train_file {train_path} " \
+          f"--per_device_eval_batch_size 2 --per_device_train_batch_size 2 --num_train_epochs 5 --evaluation_strategy " \
+          f"epoch --logging_steps 4 --logging_dir ../../../generation/finetued-model-logs --save_strategy epoch " \
+          f"--dataloader_num_workers 4 "
 print(command)
 # os.system(command)
 print("Run the command above to start training.")
+
