@@ -174,6 +174,8 @@ def main():
 
     parser.add_argument("--prompt", type=str, default="")
     parser.add_argument("--prompts_file", type=str, default="")
+    parser.add_argument("--output_file", type=str, default="")
+    parser.add_argument("--quite", type=bool, default=False)
     parser.add_argument("--length", type=int, default=20)
     parser.add_argument("--stop_token", type=str, default=None, help="Token at which text generation is stopped")
 
@@ -232,17 +234,18 @@ def main():
     args.length = adjust_length_to_model(args.length, max_sequence_length=model.config.max_position_embeddings)
     logger.info(args)
 
+    from tqdm import tqdm
     try:
         prompts_file = open(args.prompts_file, 'r')
         print(f"Preparing prompots from {args.prompts_file}")
         import pandas as pd
-        from tqdm import tqdm
         df_texts = pd.read_csv(prompts_file)["text"].to_list()
         prompts = [row[:row.find("<review>")+len("<review>")] for row in df_texts]
     except:
         prompts = [args.prompt if args.prompt else input("Model prompt >>> ")]
 
-    for prompt_text in prompts:
+    generated_sequences = []
+    for prompt_text in (tqdm(prompts) if args.quite else prompts):
         # Different models need different input formatting and/or extra arguments
         requires_preprocessing = args.model_type in PREPROCESSING_FUNCTIONS.keys()
         if requires_preprocessing:
@@ -282,10 +285,9 @@ def main():
         if len(output_sequences.shape) > 2:
             output_sequences.squeeze_()
 
-        generated_sequences = []
 
         for generated_sequence_idx, generated_sequence in enumerate(output_sequences):
-            print("=== GENERATED SEQUENCE {} ===".format(generated_sequence_idx + 1))
+            if not args.quite: print("=== GENERATED SEQUENCE {} ===".format(generated_sequence_idx + 1))
             generated_sequence = generated_sequence.tolist()
 
             # Decode text
@@ -299,10 +301,12 @@ def main():
                 prompt_text + text[len(tokenizer.decode(encoded_prompt[0], clean_up_tokenization_spaces=True)) :]
             )
 
-            # generated_sequences.append(total_sequence)
-            print(total_sequence)
+            generated_sequences.append(total_sequence)
+            if not args.quite: print(total_sequence)
 
         # return generated_sequences
+    if args.output_file:
+        with open(args.output_file, 'w') as f: f.writelines(generated_sequences)
 
 
 if __name__ == "__main__":
