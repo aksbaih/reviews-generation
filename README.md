@@ -21,5 +21,7 @@ cd transformers
 pip install .
 cd examples/language-modeling
 pip install -r requirements.txt
+cd ../text-generation
+pip install -r requirements.txt
 ```
 This repo also assumes that your machine has two GPUs with 12GB memory each. I used 2 K-80s on Azure.
