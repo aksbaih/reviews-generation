@@ -301,8 +301,9 @@ def main():
             total_sequence = (
                 prompt_text + text[len(tokenizer.decode(encoded_prompt[0], clean_up_tokenization_spaces=True)) :]
             )
-
-            generated_sequences.append(total_sequence[:total_sequence.find("<price>")])
+            total_sequence = total_sequence[total_sequence.find("<review>") + len("<review>"):]
+            total_sequence = total_sequence[:total_sequence.find("<price>")]
+            generated_sequences.append(total_sequence)
             if not args.quite: print(total_sequence)
 
         # return generated_sequences
