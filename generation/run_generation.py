@@ -245,7 +245,8 @@ def main():
         prompts = [args.prompt if args.prompt else input("Model prompt >>> ")]
 
     generated_sequences = []
-    for prompt_text in (tqdm(prompts) if args.quite else prompts):
+    import sys
+    for prompt_text in (tqdm(prompts, file=sys.stdout) if args.quite else prompts):
         # Different models need different input formatting and/or extra arguments
         requires_preprocessing = args.model_type in PREPROCESSING_FUNCTIONS.keys()
         if requires_preprocessing:
