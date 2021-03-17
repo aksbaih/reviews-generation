@@ -9,9 +9,9 @@ import pandas as pd
 from tqdm import tqdm
 
 # load the reals and the fakes
-reals = [pd.read_csv(f) for f in ["../../dataset/finetune/val.csv", "../../dataset/finetune/test.csv"]]
+reals = [pd.read_csv(f, usecols=['text']) for f in ["../../dataset/finetune/val.csv", "../../dataset/finetune/test.csv"]]
 reals = pd.concat(reals, ignore_index=True)
-reals = reals.apply(lambda row: {"text": row['text'][row['text'].find("<review>")+len("<review>"):]})
+reals = reals.apply(lambda row: row['text'][row['text'].find("<review>")+len("<review>"):], axis=1, result_type='broadcast')
 reals['gt'] = 'real'
 fakes = [pd.read_csv(f) for f in ["../../generation/generations_val.csv", "../../generation/generations_test.csv"]]
 fakes = pd.concat(fakes, ignore_index=True).drop(columns=['prompt']).rename({'gen': 'text'})
