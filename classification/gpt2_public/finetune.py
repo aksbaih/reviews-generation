@@ -13,8 +13,8 @@ reals = [pd.read_csv(f, usecols=['text']) for f in ["../../dataset/finetune/val.
 reals = pd.concat(reals, ignore_index=True)
 reals = reals.apply(lambda row: row['text'][row['text'].find("<review>")+len("<review>"):], axis=1, result_type='broadcast')
 reals['gt'] = 'real'
-fakes = [pd.read_csv(f) for f in ["../../generation/generations_val.csv", "../../generation/generations_test.csv"]]
-fakes = pd.concat(fakes, ignore_index=True).drop(columns=['prompt']).rename({'gen': 'text'})
+fakes = [pd.read_csv(f, usecols=['gen']) for f in ["../../generation/generations_val.csv", "../../generation/generations_test.csv"]]
+fakes = pd.concat(fakes, ignore_index=True).rename({'gen': 'text'})
 fakes['gt'] = 'fake'
 dataset = pd.concat([reals, fakes], ignore_index=True).sample(frac=1, replace=False, random_state=314)
 samples_count = dataset.shape[0]
@@ -49,9 +49,9 @@ command = f"cd ../../transformers/examples/language-modeling ; " \
           f"python -m torch.distributed.launch --nproc_per_node 2 run_clm.py --output_dir " \
           f"../../../classification/gpt2_public/finetuned-model-train/ --model_type gpt2 --model_name_or_path gpt2 " \
           f"--validation_file {val_path} --do_eval --do_train --train_file {train_path} " \
-          f"--per_device_eval_batch_size 2 --per_device_train_batch_size 2 --num_train_epochs 5 --evaluation_strategy " \
+          f"--per_device_eval_batch_size 2 --per_device_train_batch_size 2 --num_train_epochs 50 --evaluation_strategy " \
           f"epoch --logging_steps 4 --logging_dir ../../../classification/gpt2_public/finetued-model-logs " \
-          f"--save_strategy epoch --dataloader_num_workers 4 "
+          f"--save_strategy epoch"
 print(command)
 # os.system(command)
 print("Run the command above to start training.")
