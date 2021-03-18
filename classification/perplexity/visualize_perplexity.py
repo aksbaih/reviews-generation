@@ -20,5 +20,5 @@ ax.scatter(reals, [-2]*len(reals), alpha=0.3, c='green', label='reals')
 ax.scatter(fakes, [2]*len(fakes), alpha=0.3, c='red', label='fakes')
 
 ax.legend()
-ax.show()
+fig.show()
 
