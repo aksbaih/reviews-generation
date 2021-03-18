@@ -43,6 +43,10 @@ for _, seq in tqdm(reals.iterrows(), total=reals.shape[0], desc="Evaluating Real
     real_ps.append(perplexity.item())
 
 for _, seq in tqdm(fakes.iterrows(), total=fakes.shape[0], desc="Evaluating Fakes"):
+    if "text" not in seq or not isinstance(seq['text'], str):
+        print("skipping:")
+        print(seq)
+        continue
     encodings = tokenizer(seq['text'], return_tensors='pt')
     seq = encodings.input_ids.to(args.device)
     labels = seq.clone()
