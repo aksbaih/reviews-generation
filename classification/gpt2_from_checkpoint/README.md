@@ -8,5 +8,23 @@ The dataset is split into train/val/test sets according to the provided ratio in
 
 [`finetune.py`](finetune.py) generates a command at the end which you should run to start training using the huggingface framework.
 
+## Run Predictions
+Run the following command to find the prediction of the trained model on some file
+```
+python run_prediction.py \
+    --model_type gpt2 \
+    --model_name_or_path finetuned-model-train/ \
+    --prompts ../dataset/classify_checkpoint/test.csv \
+    --quite \
+    --output_file pred_test.csv \
+        2> /dev/null
+```
+
+## Run Metrics
+You can run a few metrics on the predictions file. In this case, we find the Precision, Recall, and Accuracy
+```
+python run_metrics.py
+```
+
 ## Note
 ***The only difference between this and [../gpt2_public](../gpt2_public) is that this launcher starts from [the checkpoint used for generation](../../generation) as outlined in the [milestone](../../report/milestone/milestone.pdf).***

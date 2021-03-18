@@ -1,6 +1,12 @@
 # reviews-generation
 Final project for Stanford CS224N NLP class involving fake reviews generation and detection
 
+* The [Generation](generation) directory has implementation and documentation for fake whiskey reviews generation.
+* The [Classification](classification) directory has implementation and documentation for classifying fake and real reviews using three different approaches.
+
+All the approaches and their details are outlined in [the final report](report/final/final.pdf) of the project; please take a look :)
+
+
 ## Submodules
 This repo contains the following submodule repos:
 * [hugginface transformers](https://github.com/huggingface/transformers) used [here](transformers).
