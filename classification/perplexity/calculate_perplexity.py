@@ -42,6 +42,9 @@ for _, seq in tqdm(reals.iterrows(), total=reals.shape[0], desc="Evaluating Real
     perplexity = torch.exp(output)
     real_ps.append(perplexity.item())
 
+with open('reals.txt', 'w') as f:
+    f.writelines([str(itm) + '\n' for itm in real_ps])
+
 for _, seq in tqdm(fakes.iterrows(), total=fakes.shape[0], desc="Evaluating Fakes"):
     if "text" not in seq or not isinstance(seq['text'], str):
         print("skipping:")
@@ -54,9 +57,6 @@ for _, seq in tqdm(fakes.iterrows(), total=fakes.shape[0], desc="Evaluating Fake
     perplexity = torch.exp(output)
     fake_ps.append(perplexity.item())
 
-with open('reals.txt', 'w') as f:
-    f.writelines([str(itm) for itm in real_ps])
-
 with open('fakes.txt', 'w') as f:
-    f.writelines([str(itm) for itm in fake_ps])
+    f.writelines([str(itm) + '\n' for itm in fake_ps])
 
