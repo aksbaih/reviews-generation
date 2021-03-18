@@ -32,13 +32,27 @@ reals = reals.apply(lambda row: row['text'][row['text'].find("<review>")+len("<r
 fakes = [pd.read_csv(f, usecols=['gen']) for f in ["../../generation/generations_val.csv", "../../generation/generations_test.csv"]]
 fakes = pd.concat(fakes, ignore_index=True).rename(columns={'gen': 'text'})
 
-for seq in tqdm(reals.iterrows()):
+real_ps, fake_ps = [], []
+
+for _, seq in tqdm(reals.iterrows(), total=reals.shape[0], desc="Evaluating Reals"):
     encodings = tokenizer(seq['text'], return_tensors='pt')
-    print(encodings)
-    seq = encodings.to(args.device)
+    seq = encodings.input_ids.to(args.device)
     labels = seq.clone()
-    output = model(seq, labels=labels)
-    print(output.detach().cpu())
-    perplexity = torch.exp(output[0])
-    print(perplexity.detach().cpu())
+    output = model(seq, labels=labels)[0]
+    perplexity = torch.exp(output)
+    real_ps.append(perplexity.item())
+
+for _, seq in tqdm(fakes.iterrows(), total=fakes.shape[0], desc="Evaluating Fakes"):
+    encodings = tokenizer(seq['text'], return_tensors='pt')
+    seq = encodings.input_ids.to(args.device)
+    labels = seq.clone()
+    output = model(seq, labels=labels)[0]
+    perplexity = torch.exp(output)
+    fake_ps.append(perplexity.item())
+
+with open('reals.txt', 'w') as f:
+    f.writelines([str(itm) for itm in real_ps])
+
+with open('fakes.txt', 'w') as f:
+    f.writelines([str(itm) for itm in fake_ps])
 
