@@ -16,8 +16,8 @@ fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.set_ylim(-10,10)
 
-ax.scatter(reals, [0]*len(reals), c='green', label='reals')
-ax.scatter(fakes, [0]*len(fakes), c='red', label='fakes')
+ax.scatter(reals, [-2]*len(reals), alpha=0.3, c='green', label='reals')
+ax.scatter(fakes, [2]*len(fakes), alpha=0.3, c='red', label='fakes')
 
 ax.legend()
 ax.show()
